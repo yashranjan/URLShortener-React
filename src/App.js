@@ -1,6 +1,9 @@
+// Default/3rd-party libraries import
 import React from 'react'
-import './App.css'
 import Form from './Form.js'
+
+// Custom CSS import
+import './App.css'
 
 function App() {
   return (
