@@ -7,22 +7,43 @@ const Form = () => {
   let [showOutput, setShowOutput] = useState('none')
   let [urlToShort, setUrlToShort] = useState('')
   let [shortenedURL, setShortenedURL] = useState('')
+
   let handleFormSubmit = (event) => {
     event.preventDefault()
     // Fetch the value entered and store it
     let URLEntered = event.target.url.value
     let choiceEntered = event.target.choice.value
-    //  Dummy data received
-    axios.get('https://gorest.co.in/public/v1/users').then((response) => {
-      if (response.status === 200) {
-        setShowOutput('ok')
-        setShortenedURL(choiceEntered)
-        setUrlToShort(URLEntered)
-      } else {
-        setShowOutput('error')
-        setUrlToShort(URLEntered)
-      }
-    })
+    if (choiceEntered && choiceEntered.length < 4) {
+      setShowOutput('error')
+      setUrlToShort(URLEntered)
+      setShortenedURL(choiceEntered)
+      return
+    }
+
+    let params = {
+      urlentered: URLEntered,
+    }
+
+    params['choiceentered'] = choiceEntered ? choiceEntered : ''
+
+    axios
+      .get('https://url-shortenert.herokuapp.com/add-url/', {
+        params: params,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          let data = JSON.parse(response.data.data)
+          setShowOutput('ok')
+          setShortenedURL(data.shortURL)
+          setUrlToShort(data.originalURL)
+        } else if (response.data.status === 500) {
+          alert(response.data.error)
+          setUrlToShort(URLEntered)
+        } else {
+          setShowOutput('error')
+          setUrlToShort(URLEntered)
+        }
+      })
   }
   return (
     <div>
@@ -50,7 +71,8 @@ const Form = () => {
         <center>
           <h3>URL successfully shortened!!</h3>
           <h3>
-            Use localhost:3000/{shortenedURL} to access {urlToShort}
+            Use https://url-shortenert.herokuapp.com/{shortenedURL} to access{' '}
+            {urlToShort}
           </h3>
           <input
             type='button'
@@ -66,8 +88,8 @@ const Form = () => {
       {showOutput === 'error' && (
         <center>
           <h3 className='warning'>
-            The URL of the choice is not available!! Kindly re-try or simply
-            submit!!
+            The URL of the choice is not available or is less than 4
+            characters!! Kindly re-try or simply submit without any choice!!
           </h3>
           <form onSubmit={(event) => handleFormSubmit(event)}>
             <input
