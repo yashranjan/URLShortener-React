@@ -40,7 +40,7 @@ To get the setup up and running, follow the below steps
 1 Clone the repo
 
 ```
- git clone https://github.com/yashranjan/URLShortener-React && cd URLShortener-React
+git clone https://github.com/yashranjan/URLShortener-React && cd URLShortener-React
 ```
 
 2 Install the dependencies mentioned in the package.json by doing
