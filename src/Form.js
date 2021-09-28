@@ -46,7 +46,10 @@ const Form = () => {
           setShortenedURL(data.shortURL)
           setUrlToShort(data.originalURL)
           navigator.clipboard.writeText(URL + data.shortURL)
-        } else if (response.data.status === 500) {
+        } else if (
+          response.data.status === 500 ||
+          response.data.status === 405
+        ) {
           // If the status is 500, show the alert box with the error
           alert(response.data.error)
           setShowOutput('none')
